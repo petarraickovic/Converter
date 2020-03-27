@@ -29,6 +29,8 @@
     <Compile Include="API.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FileDownloading.py" />
+    <Compile Include="FileProcessing.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Rates\" />

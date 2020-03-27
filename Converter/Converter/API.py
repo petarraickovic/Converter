@@ -8,55 +8,11 @@ import os
 import xml.etree.ElementTree as ET
 import json
 from datetime import datetime,timedelta, date
+from FileDownloading import DownloadClass
+from FileProcessing import ExtractData
 
 app = Flask(__name__)
 api = Api(app)
-
-
-
-
-
-class FileProcessing():
-
-    def extract_rates(self,currency, filePart):
-        if(currency != 'EUR'):
-            try:
-                data = next(curr for curr in filePart if(curr.attrib.get('currency') == currency))
-            except StopIteration:
-                return None
-            rate = data.attrib.get('rate')
-        else:
-            rate = 1
-        return rate
-
-
-    def process_file(self,fileName,src_currency, dest_currency, reference_date):
-        tree = ET.parse(fileName)
-        root = tree.getroot()
-        desiredFilePart = next(child for child in root if('Cube' in child.tag))
-        try:
-            desiredTime = next(child1 for child1 in desiredFilePart if(child1.attrib.get('time') == reference_date))
-        except StopIteration:
-            return None
-        src_rate = FileProcessing().extract_rates(src_currency, desiredTime)
-        dest_rate = FileProcessing().extract_rates(dest_currency, desiredTime)
-        return src_rate, dest_rate
-
-
-
-class FileDownloading():
-
-    def download_file(self, url, destination):
-        if os.path.exists(destination):
-            mtime = date.fromtimestamp(os.path.getmtime(destination))
-            cur_time = date.today() - timedelta(days = 1)
-            if(mtime < cur_time ):
-                os.remove(destination)
-                wget.download(url, destination)
-        else:    
-            wget.download(url, destination)
-    
-
 
 @app.errorhandler(400)
 def bad_request(e):
@@ -65,6 +21,10 @@ def bad_request(e):
 @app.errorhandler(404)
 def not_found(e):
     return e, 404
+
+@app.errorhandler(500)
+def not_found(e):
+    return "There has been a problem, please try again later", 500
 
 @app.route('/converter', methods=['GET'])
 def api_filter():
@@ -88,12 +48,12 @@ def api_filter():
     url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml"
     destination = "Rates/rates.xml"
 
-    FileDownloading().download_file(url,destination)   
+    DownloadClass().download_file(url,destination)   
 
-    if(FileProcessing().process_file(destination,src_currency, dest_currency, reference_date) == None):
+    if(ExtractData().process_file(destination,src_currency, dest_currency, reference_date) == None):
         return not_found("There is no data for the " + reference_date + " date")
     else:
-        src_rate, dest_rate = FileProcessing().process_file(destination,src_currency, dest_currency, reference_date)
+        src_rate, dest_rate = ExtractData().process_file(destination,src_currency, dest_currency, reference_date)
 
         if(src_rate == None):
             return not_found("There is no data for the " + src_currency + " currency code")
