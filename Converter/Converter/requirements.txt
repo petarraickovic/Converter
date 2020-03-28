@@ -1,7 +1,4 @@
 flask
 flask_restful
-json
 wget
-os
-xml.etree.ElementTree
 datetime
