@@ -43,7 +43,7 @@ def api_filter():
     
     
     url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml"
-    destination = "Rates/rates.xml"
+    destination = "rates.xml"
 
     DownloadClass().download_file(url,destination)   
 

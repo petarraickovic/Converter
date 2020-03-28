@@ -33,12 +33,8 @@
     <Compile Include="FileProcessing.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Rates\" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include=".gitignore" />
     <Content Include="Dockerfile" />
-    <Content Include="Dockerfile.txt" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
