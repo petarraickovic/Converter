@@ -36,6 +36,8 @@
     <Folder Include="Rates\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".gitignore" />
+    <Content Include="Dockerfile" />
     <Content Include="Dockerfile.txt" />
     <Content Include="requirements.txt" />
   </ItemGroup>
